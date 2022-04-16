@@ -43,6 +43,7 @@ class selection_student:
         next.screen()
         
 
+
     def screen(self):
         super()
         frame=Frame(root,height=400,width=600)
@@ -61,8 +62,12 @@ class selection_admin:
         next=login()
         next.screen()
         
+    def back(frame):
+        frame.destroy()
+        back=selection_admin()
+        back.screen()
     
-    def subject_add(frame,x):
+    def subject_add(frame):
         frame.destroy()
         frame=Frame(root,height=400,width=600)
         frame.grid(row=0, column=0, sticky='nsew')
@@ -74,12 +79,13 @@ class selection_admin:
         os.place(relx=.5, rely=.5,anchor= CENTER,y=-20)
         toc.place(relx=.5, rely=.5,anchor= CENTER,y=20)
         cp.place(relx=.5, rely=.5,anchor= CENTER,y=60)
+        back=Button(frame,text="Back",command=lambda:selection_admin.back(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,y=100)
 
-    def subject_remove(frame,x):
+    def subject_remove(frame):
         frame.destroy()
         frame=Frame(root,height=400,width=600)
         frame.grid(row=0, column=0, sticky='nsew')
-        print("selection_admin."+x+"(frame,'ds')")
         ds=Button(frame,text="Data science",command=lambda:selection_admin.remove_display(frame,'os'))
         os=Button(frame,text="Operating system",command=lambda:selection_admin.remove_display(frame,'ds'))
         toc=Button(frame,text="Theory of computation",command=lambda:selection_admin.remove_display(frame,'toc'))
@@ -88,6 +94,28 @@ class selection_admin:
         os.place(relx=.5, rely=.5,anchor= CENTER,y=-20)
         toc.place(relx=.5, rely=.5,anchor= CENTER,y=20)
         cp.place(relx=.5, rely=.5,anchor= CENTER,y=60)
+        back=Button(frame,text="Back",command=lambda:selection_admin.back(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,y=100)
+
+    def subject_pending(frame):
+        frame.destroy()
+        frame=Frame(root,height=400,width=600)
+        frame.grid(row=0, column=0, sticky='nsew')
+        ds=Button(frame,text="Data science",command=lambda:selection_admin.pending_display(frame,'os'))
+        os=Button(frame,text="Operating system",command=lambda:selection_admin.pending_display(frame,'ds'))
+        toc=Button(frame,text="Theory of computation",command=lambda:selection_admin.pending_display(frame,'toc'))
+        cp=Button(frame,text="Computer Programming II",command=lambda:selection_admin.pending_display(frame,'cp'))
+        ds.place(relx=.5, rely=.5,anchor= CENTER,y=-60)
+        os.place(relx=.5, rely=.5,anchor= CENTER,y=-20)
+        toc.place(relx=.5, rely=.5,anchor= CENTER,y=20)
+        cp.place(relx=.5, rely=.5,anchor= CENTER,y=60)
+        back=Button(frame,text="Back",command=lambda:selection_admin.back(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,y=100)
+
+    def pending_display(frame,sub):
+        back=Button(frame,text="Back",command=lambda:selection_admin.subject_pending(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=100)
+
 
     def remove_display(frame,sub):
         frame.destroy()
@@ -99,7 +127,9 @@ class selection_admin:
         remove=Button(frame,text="Remove")
         label.place(relx=.5,rely=.5,anchor=CENTER,x=-100,y=0)
         entry.place(relx=.5,rely=.5,anchor=CENTER,x=25,y=0)
-        remove.place(relx=.5,rely=.5,anchor=CENTER,y=50)
+        remove.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=50)
+        back=Button(frame,text="Back",command=lambda:selection_admin.subject_remove(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=50)
 
         
     def add_display(frame,sub):
@@ -115,14 +145,16 @@ class selection_admin:
         entry1=Entry(frame,textvariable=anum)
         entry2=Entry(frame,textvariable=wl)
         entry3=Entry(frame,textvariable=dd)
-        submit=Button(frame,text="submit")#command=lambda:pdm.add())
+        submit=Button(frame,text="Submit")#command=lambda:pdm.add())
         Label1.place(relx=.5,rely=.5,anchor=CENTER,x=-100,y=-40)
         Label2.place(relx=.5,rely=.5,anchor=CENTER,x=-80,y=0)
         Label3.place(relx=.5,rely=.5,anchor=CENTER,x=-80,y=40)
         entry1.place(relx=.5,rely=.5,anchor=CENTER,x=25,y=-40)
         entry2.place(relx=.5,rely=.5,anchor=CENTER,x=25,y=0)
         entry3.place(relx=.5,rely=.5,anchor=CENTER,x=25,y=40)
-        submit.place(relx=.5,rely=.5,anchor=CENTER,y=100)
+        submit.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=100)
+        back=Button(frame,text="Back",command=lambda:selection_admin.subject_add(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=100)
 
 
     
@@ -130,8 +162,8 @@ class selection_admin:
         super()
         frame=Frame(root,height=400,width=600)
         frame.grid(row=0, column=0, sticky='nsew')
-        add=Button(frame,text="Add assignment",command=lambda:selection_admin.subject_add(frame,"add_display"))
-        remove=Button(frame,text="Remove assignment",command=lambda:selection_admin.subject_remove(frame,"remove_display"))
+        add=Button(frame,text="Add assignment",command=lambda:selection_admin.subject_add(frame))
+        remove=Button(frame,text="Remove assignment",command=lambda:selection_admin.subject_remove(frame))
         pending=Button(frame,text="Show all pending assignments",command=lambda:selection_admin.subject(frame))
         mark=Button(frame,text="Mark complete",command=lambda:selection_admin.subject(frame))
         logout=Button(frame,text="logout",command=lambda:selection_admin.call(frame))
