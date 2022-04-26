@@ -12,7 +12,12 @@ class login():
         elif "s" in v:
             frame.destroy()
             next=selection_student()
-            next.screen()  
+            next.screen(id)  
+        elif "X" in v:
+            print("here")
+            frame.destroy()
+            next=login()
+            next.screen("X")
 
         
     def reg_call(frame,user_var,passw_var,status_var):
@@ -58,9 +63,9 @@ class login():
     def back(frame):
         frame.destroy()
         back=login()
-        back.screen()
+        back.screen("n")
 
-    def screen(self):
+    def screen(self,x):
         super()
         user_var=StringVar()
         passw_var=StringVar()
@@ -74,11 +79,14 @@ class login():
         label2.place(relx=.5, rely=.5,anchor= CENTER,x=-60,y=10)
         entry_1.place(relx=.5, rely=.5,anchor= CENTER,x=40,y=-10)
         entry_2.place(relx=.5, rely=.5,anchor= CENTER,x=40,y=10)
-
         submit = Button(frame, text="Login",command=lambda:login.call(frame,user_var,passw_var))
         submit.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=40)
         submit = Button(frame, text="Register",command=lambda:login.register(frame))
         submit.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=40)
+        if x=="X":
+            warn=Label(frame,text="Incorrect id/password\nCheck and try again",fg='red')
+            warn.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=-50)
+            x="n"
         root.mainloop()
     
         
@@ -87,15 +95,36 @@ class selection_student:
         frame.destroy()
         next=login()
         next.screen()
-        
 
+    def back(frame,id):
+        frame.destroy()
+        back=selection_student()
+        back.screen(id)
 
-    def screen(self):
+    def all_assignment(frame,id):
+        frame.destroy()
+        frame=Frame(root,height=400,width=600)
+        frame.grid(row=0, column=0, sticky='nsew')
+        label=Label(frame,text=show_all())
+        label.place(relx=.5,rely=.5,anchor=CENTER)
+        done=Button(frame,text="Back",command=lambda:selection_student.back(frame,id))
+        done.place(relx=.5,rely=.5,anchor=CENTER,y=-120)
+
+    def pending_assignment(frame,id):
+        frame.destroy()
+        frame=Frame(root,height=400,width=600)
+        frame.grid(row=0, column=0, sticky='nsew')
+        label=Label(frame,text=show_pending())
+        label.place(relx=.5,rely=.5,anchor=CENTER)
+        done=Button(frame,text="Back",command=lambda:selection_student.back(frame,id))
+        done.place(relx=.5,rely=.5,anchor=CENTER,y=-120)
+
+    def screen(self,id):
         super()
         frame=Frame(root,height=400,width=600)
         frame.grid(row=0, column=0, sticky='nsew')
         incomplete=Button(frame,text="Show all pending assignments")
-        select=Button(frame,text="Show all assignments")
+        select=Button(frame,text="Show all assignments",command=lambda:selection_student.all_assignment(frame,id))
         logout=Button(frame,text="logout",command=lambda:selection_student.call(frame))
         select.place(relx=.5, rely=.5,anchor= CENTER,y=-50)
         incomplete.place(relx=.5, rely=.5,anchor= CENTER)
@@ -112,6 +141,32 @@ class selection_admin:
         frame.destroy()
         back=selection_admin()
         back.screen()
+
+    def mark(frame):
+        frame.destroy()
+        frame=Frame(root,height=400,width=600)
+        frame.grid(row=0, column=0, sticky='nsew')
+        d=student_dict()
+        n=0
+        x=-200
+        y=[-70, -60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60, 70]
+        for i in d:
+            d[i]=Variable()
+            d[i].set(0)
+            l = Checkbutton(frame, text=i, variable=d[i])
+            l.place(relx=0.5,rely=0.5,anchor=CENTER,x=x,y=(2*y[n]))
+            n+=1
+            if n==len(y):
+                n=0
+                x+=100
+        button=Button(frame,text="press",command=lambda:mark(frame,d))
+        button.place(relx=0.5,rely=0.5,anchor=CENTER,y=180)
+def mark(frame,d):
+    for i in d:
+        a=d[i].get()
+        print(a)
+
+
 
     def pending_display(frame):
         frame.destroy()
@@ -131,6 +186,7 @@ class selection_admin:
         show.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=100)
         back=Button(frame,text="Back",command=lambda:selection_admin.back(frame))
         back.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=100)
+
     def show_remaining(frame,sub):
         frame.destroy()
         frame=Frame(root,height=400,width=600)
@@ -140,6 +196,7 @@ class selection_admin:
         text=pending_admin(sub)
         label=Label(frame,text=text)
         label.place(relx=.5,rely=.5,anchor=CENTER)
+
     def remove_display(frame):
         frame.destroy()
         frame=Frame(root,height=400,width=600)
@@ -172,8 +229,6 @@ class selection_admin:
         frame=Frame(root,height=400,width=600)
         frame.grid(row=0, column=0, sticky='nsew')
         selection.admin.back()
-
-
         
     def add_display(frame):
         frame.destroy()
@@ -220,9 +275,6 @@ class selection_admin:
         frame.grid(row=0, column=0, sticky='nsew')
         selection.admin.back()
     
-
-
-    
     def screen(self):
         super()
         frame=Frame(root,height=400,width=600)
@@ -243,4 +295,4 @@ root=Tk()
 root.geometry("600x400")
 root.title(string='Project Manager')
 w=login()
-w.screen()
+w.screen("n")

@@ -2,24 +2,26 @@ import mysql.connector as myc
 from datetime import datetime, timezone
 conn=myc.connect(host='localhost',user='root',password='12345',database='project_management')
 cursor=conn.cursor()
+
 def connect():
     conn=myc.connect(host='localhost',user='root',password='12345',database='project_management')
     cursor=conn.cursor()
+
 def register(id,password,status):
     connect()
     q="insert into users values('"+id+"','"+password+"','"+status+"')"
-    print(q)
     cursor.execute(q)
     conn.commit()
     conn.close()
+
 def verify(id,password):
     connect()
     q="select status from users where id='"+str(id)+"' and password='"+password+"';"
     cursor.execute(q)
     data=cursor.fetchall()
-    d=data[0]
-    if len(data)==0:
-        return data[0]
+    print(data)
+    if not data:
+        return "X"
     else:
 
         return data[0]
@@ -43,13 +45,7 @@ def remove(sub,anum):
     conn.commit()
     conn.close()
 
-def pending_admin(sub):
-    connect()
-    #q="select id from "+user+" where id not in(select id from "+sub+";"
-    q="select * from class_work"
-    cursor.execute(q)
-    data=cursor.fetchall()
-    print(data)
+def display(data):
     d=""
     n=0
     for row in data:
@@ -60,3 +56,38 @@ def pending_admin(sub):
         d+="\n"
         d+=( '_'*n)
     return d
+
+def pending_admin(sub):
+    connect()
+    q="select id from "+user+" where status='s' and id not in(select id from "+sub+";"
+    cursor.execute(q)
+    data=cursor.fetchall()
+    d=display(data)
+    return d
+
+def show_all():
+    q="select * from class_work"
+    cursor.execute(q)
+    data=cursor.fetchall()
+    d=display(data)
+    return d
+
+def show_pending(id):
+    for i in ["os","toc","dbms","cp"]:
+        q="select * from class_work where sub='"+i+"' and assignment_num not in (select assignment_num from '"+i+"' where id='"+id+"');"
+        cursor.execute(q)
+        data=cursor.fetchall()
+        d=display(data)
+    return d
+        
+def student_dict():
+    q="select id from users where status='s';"
+    cursor.execute(q)
+    data=cursor.fetchall()
+    d={}
+    for i in data:
+        if i[0]!=None:
+            d[i[0]]=0
+    return d
+
+
