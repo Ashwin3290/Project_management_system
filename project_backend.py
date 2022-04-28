@@ -80,14 +80,32 @@ def show_pending(id):
         d=display(data)
     return d
         
-def student_dict():
+def student_dict(sub):
     q="select id from users where status='s';"
     cursor.execute(q)
     data=cursor.fetchall()
-    d={}
+    d=[]
+    e=[]
+    al=[]
     for i in data:
         if i[0]!=None:
-            d[i[0]]=0
-    return d
+            d.append(i[0])
+            e.append(0)
+    q="select distinct assignment_num from class_work where sub_name='"+sub+"';"
+    cursor.execute(q)
+    data=cursor.fetchall()
+    for i in data:
+        if i[0]!=None:
+            al.append(i[0])
+    return d,e,al
 
+def student_mark(d,sub,anum):
+    q="insert into "+sub+" values"
+    for i in d:
+        q+="('"+anum +"','"+i+"')"
+    cursor.execute(q)
+    conn.commit()
+    conn.close()
+    
+    
 

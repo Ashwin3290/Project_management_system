@@ -1,5 +1,7 @@
 from tkinter import *
 from project_backend import *
+
+    
 class login():
     def call(frame,user_var,passw_var):
         name=user_var.get()
@@ -80,9 +82,9 @@ class login():
         entry_1.place(relx=.5, rely=.5,anchor= CENTER,x=40,y=-10)
         entry_2.place(relx=.5, rely=.5,anchor= CENTER,x=40,y=10)
         submit = Button(frame, text="Login",command=lambda:login.call(frame,user_var,passw_var))
-        submit.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=40)
+        submit.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=60)
         submit = Button(frame, text="Register",command=lambda:login.register(frame))
-        submit.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=40)
+        submit.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=60)
         if x=="X":
             warn=Label(frame,text="Incorrect id/password\nCheck and try again",fg='red')
             warn.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=-50)
@@ -142,29 +144,63 @@ class selection_admin:
         back=selection_admin()
         back.screen()
 
-    def mark(frame):
+    def mark_option(frame):
         frame.destroy()
         frame=Frame(root,height=400,width=600)
         frame.grid(row=0, column=0, sticky='nsew')
-        d=student_dict()
+        r1 = Button(frame, text="OS",command=lambda:selection_admin.mark(frame,"os"))
+        r1.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=-40)
+        r2 = Button(frame, text="DMBS",command=lambda:selection_admin.mark(frame,"dbms"))
+        r2.place(relx=.5,rely=.5,anchor=CENTER,x=-40,y=40)
+        r3 = Button(frame, text="CP",command=lambda:selection_admin.mark(frame,"cp"))
+        r3.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=-40)
+        r4 = Button(frame, text="TOC",command=lambda:selection_admin.mark(frame,"toc"))
+        r4.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=40)     
+
+    def mark(frame,sub):
+        frame.destroy()
+        frame=Frame(root,height=400,width=600)
+        frame.grid(row=0, column=0, sticky='nsew')
+        d,e,anums=student_dict(sub)
+        anum=StringVar()
         n=0
+
+        y=[-65, -55, -45, -35, -25, -15, -5, 5, 15, 25, 35, 45, 55, 65]
+        label=Label(frame,text="Assignment number")
+        label.place(relx=.5,rely=.5,anchor=CENTER,x=-180,y=-160)
+        x=-100
+        for i in anums:
+            l = Radiobutton(frame, text=i,variable=anum)
+            l.place(relx=0.5,rely=0.5,anchor=CENTER,x=x,y=-160)
+            x+=20
         x=-200
-        y=[-70, -60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60, 70]
-        for i in d:
-            d[i]=Variable()
-            d[i].set(0)
-            l = Checkbutton(frame, text=i, variable=d[i])
+        if n==len(y):
+            n=0
+            x+=100
+        for i,j in zip(d,e):
+            j=Variable()
+            j.set(0)
+            l = Checkbutton(frame, text=i, variable=j)
             l.place(relx=0.5,rely=0.5,anchor=CENTER,x=x,y=(2*y[n]))
+            e[d.index(i)]=j
             n+=1
             if n==len(y):
                 n=0
                 x+=100
-        button=Button(frame,text="press",command=lambda:mark(frame,d))
-        button.place(relx=0.5,rely=0.5,anchor=CENTER,y=180)
-def mark(frame,d):
-    for i in d:
-        a=d[i].get()
-        print(a)
+        button=Button(frame,text="Save",command=lambda:selection_admin.make_final(d,e,sub,anum))
+        button.place(relx=0.5,rely=0.5,anchor=CENTER,x=-40,y=180)
+        back=Button(frame,text="Back",command=lambda:selection_admin.back(frame))
+        back.place(relx=.5,rely=.5,anchor=CENTER,x=40,y=180)
+
+    def mark_final(d,e,sub,anum):
+        save=[]
+        for i,j in zip(d,e):
+            a=j.get()
+            if a=='1':
+                print(i)
+                save.append(i)
+        
+    
 
 
 
@@ -282,7 +318,7 @@ def mark(frame,d):
         add=Button(frame,text="Add assignment",command=lambda:selection_admin.add_display(frame))
         remove=Button(frame,text="Remove assignment",command=lambda:selection_admin.remove_display(frame))
         pending=Button(frame,text="Show all pending assignments",command=lambda:selection_admin.pending_display(frame))
-        mark=Button(frame,text="Mark complete",command=lambda:selection_admin.subject(frame))
+        mark=Button(frame,text="Mark complete",command=lambda:selection_admin.mark_option(frame))
         logout=Button(frame,text="logout",command=lambda:selection_admin.call(frame))
         add.place(relx=.5, rely=.5,anchor= CENTER,y=-60)
         remove.place(relx=.5, rely=.5,anchor= CENTER,y=-30)
